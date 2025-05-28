@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setVenue } from './venueSlice';
+// import { setVenue } from './venueSlice'; //
 
 const VenueSelector = () => {
   const dispatch = useDispatch();
