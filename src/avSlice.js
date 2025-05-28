@@ -1,37 +1,55 @@
-// src/avSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 export const avSlice = createSlice({
   name: "av",
   initialState: [
-    {
-      name: "Projector",
-      cost: 300,
-      quantity: 0,
+        {
+        img: "",
+        name: "Projectors",
+        cost: 200,
+        quantity: 0,
     },
     {
-      name: "Sound System",
-      cost: 500,
-      quantity: 0,
+        img: "",
+        name: "Speaker",
+        cost: 35,
+        quantity: 0,
     },
     {
-      name: "Video Recording",
-      cost: 800,
-      quantity: 0,
+        img: "",
+        name: "Microphones",
+        cost: 45,
+        quantity: 0,
     },
+    {
+        img: "",
+        name: "Whiteboards",
+        cost: 80,
+        quantity: 0,
+    },
+
+    {
+        img: "",
+        name: "Signage",
+        cost: 80,
+        quantity: 0,
+    },
+
   ],
+
+
   reducers: {
     incrementAvQuantity: (state, action) => {
-      const { payload: index } = action;
-      if (state[index]) {
-        state[index].quantity++;
-      }
+        const item = state[action.payload];
+        if (item) {
+            item.quantity++;
+        }
     },
     decrementAvQuantity: (state, action) => {
-      const { payload: index } = action;
-      if (state[index] && state[index].quantity > 0) {
-        state[index].quantity--;
-      }
+        const item = state[action.payload];
+        if (item && item.quantity > 0) {
+            item.quantity--;
+        }
     },
   },
 });
