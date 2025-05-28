@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import "./ConferenceEvent.css";
 import TotalCost from "./TotalCost";
-import AVSelector from "./AVSelector"; // ✅ Import AVSelector
+import AVSelector from "./AVSelector";
+import MealSelector from "./MealSelector";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementQuantity, decrementQuantity } from "./venueSlice";
 
 const ConferenceEvent = () => {
   const [showItems, setShowItems] = useState(false);
-  const [numberOfPeople, setNumberOfPeople] = useState(1);
   const venueItems = useSelector((state) => state.venue);
+  const meals = useSelector((state) => state.meals); // ✅ added
   const dispatch = useDispatch();
+
   const remainingAuditoriumQuantity =
     3 -
     venueItems.find((item) => item.name === "Auditorium Hall (Capacity:200)")
@@ -35,35 +37,27 @@ const ConferenceEvent = () => {
     }
   };
 
-  const getItemsFromTotalCost = () => {
-    const items = [];
-    return items;
-  };
-
-  const items = getItemsFromTotalCost();
-
-  const ItemsDisplay = ({ items }) => {
-    return null;
-  };
-
   const calculateTotalCost = (section) => {
     let totalCost = 0;
     if (section === "venue") {
       venueItems.forEach((item) => {
         totalCost += item.cost * item.quantity;
       });
+    } else if (section === "meals") {
+      meals.forEach((meal) => {
+        if (meal.selected) {
+          totalCost += meal.cost;
+        }
+      });
     }
     return totalCost;
   };
 
   const venueTotalCost = calculateTotalCost("venue");
+  const mealTotalCost = calculateTotalCost("meals");
 
   const navigateToProducts = (idType) => {
-    if (
-      idType == "#venue" ||
-      idType == "#addons" ||
-      idType == "#meals"
-    ) {
+    if (["#venue", "#addons", "#meals"].includes(idType)) {
       if (!showItems) {
         setShowItems(true);
       }
@@ -88,7 +82,7 @@ const ConferenceEvent = () => {
           </div>
           <button
             className="details_button"
-            onClick={() => setShowItems(!showItems)}
+            onClick={handleToggleItems}
           >
             Show Details
           </button>
@@ -185,7 +179,7 @@ const ConferenceEvent = () => {
                 <h1>Add-ons Selection</h1>
               </div>
               <div className="addons_selection">
-                <AVSelector /> {/* ✅ Add-ons UI inserted here */}
+                <AVSelector />
               </div>
               <div className="total_cost">Total Cost:</div>
             </div>
@@ -195,17 +189,18 @@ const ConferenceEvent = () => {
               <div className="text">
                 <h1>Meals Selection</h1>
               </div>
-              <div className="input-container venue_selection"></div>
-              <div className="meal_selection"></div>
-              <div className="total_cost">Total Cost: </div>
+              <div className="meal_selection">
+                <MealSelector />
+              </div>
+              <div className="total_cost">Total Cost: ${mealTotalCost}</div>
             </div>
           </div>
         ) : (
           <div className="total_amount_detail">
             <TotalCost
-              totalCosts={totalCosts}
+              totalCosts={{}} // ⬅️ Will finalize this in the TotalCost step
               handleClick={handleToggleItems}
-              ItemsDisplay={() => <ItemsDisplay items={items} />}
+              ItemsDisplay={() => null}
             />
           </div>
         )}
